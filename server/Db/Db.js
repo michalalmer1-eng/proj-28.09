@@ -7,5 +7,6 @@ let items = [
 let users = [
   { username: "michal", password: "1234" }
 ];
+let activeTokens = []; 
 
-module.exports = { items, users };
+module.exports = { items, users ,activeTokens};
