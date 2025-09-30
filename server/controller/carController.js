@@ -10,6 +10,9 @@ const healthCheck = (req, res) => {
 const getAllItems = (req, res) => {
   res.json(items);
 };
+const getAllUsers = (req, res) => {
+  res.json(users);
+}
 
 // POST 
 const addItem = (req, res) => {
@@ -39,6 +42,10 @@ const login = (req, res) => {
   const token = generateToken();
   activeTokens.push(token);
 
+  console.log("User logged in:", username);
+  console.log("Generated token:", token);
+  console.log("Active tokens after login:", activeTokens);
+
   res.json({ token }); 
 };
 //logout
@@ -57,7 +64,26 @@ console.log("Token from request:", token);
   }
 
   res.status(404).json({ message: "Token not found" });
-
-
 };
-module.exports = { healthCheck, getAllItems, addItem, login, logout };
+// Register
+const register = (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "חסר שם משתמש או סיסמה" });
+  }
+
+  // בדיקה אם המשתמש כבר קיים
+  const existingUser = users.find((u) => u.username === username);
+  if (existingUser) {
+    return res.status(409).json({ message: "משתמש כבר קיים" });
+  }
+
+  // יצירת משתמש חדש
+  const newUser = { username, password };
+  users.push(newUser);
+
+  res.status(201).json({ message: "נרשמת בהצלחה!", user: newUser });
+};
+
+module.exports = { healthCheck, getAllItems,getAllUsers, addItem, login, logout, register };
